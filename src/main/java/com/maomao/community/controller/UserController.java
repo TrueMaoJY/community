@@ -5,6 +5,8 @@ import com.maomao.community.util.CommunityUtil;
 import com.maomao.community.util.HostHolder;
 import com.maomao.community.entity.User;
 import com.maomao.community.service.UserService;
+import lombok.extern.slf4j.Slf4j;
+import lombok.extern.slf4j.XSlf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,10 +26,11 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 @Controller
+@Slf4j
 @RequestMapping("/user")
 public class UserController {
 
-    private static final Logger logger = LoggerFactory.getLogger(UserController.class);
+
 
     @Value("${community.path.upload}")
     private String uploadPath;
@@ -73,7 +76,7 @@ public class UserController {
             // 存储文件
             headerImage.transferTo(dest);
         } catch (IOException e) {
-            logger.error("上传文件失败: " + e.getMessage());
+            log.error("上传文件失败: " + e.getMessage());
             throw new RuntimeException("上传文件失败,服务器发生异常!", e);
         }
 
@@ -104,7 +107,7 @@ public class UserController {
                 os.write(buffer, 0, b);
             }
         } catch (IOException e) {
-            logger.error("读取头像失败: " + e.getMessage());
+            log.error("读取头像失败: " + e.getMessage());
         }
     }
 

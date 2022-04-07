@@ -22,4 +22,19 @@ public interface DiscussPostMapper {
     * @since JDK 1.8
     */
     int insertDiscussPost(DiscussPost post);
+    /**
+    * Description:帖子详情
+    * date: 2022/4/6 18:46
+    * @author: MaoJY
+    * @since JDK 1.8
+    */
+    DiscussPost discussPostDetail(int id);
+
+    /**
+    * Description:修改评论数
+    * date: 2022/4/6 18:47
+    * @author: MaoJY
+    * @since JDK 1.8
+    */
+    int updateCommentCount(int id,int commentCount);
 }

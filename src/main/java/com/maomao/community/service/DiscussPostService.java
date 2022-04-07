@@ -39,4 +39,22 @@ public class DiscussPostService {
         post.setContent(sensitiveWordFilter.filter(post.getContent()));
         return discussPostMapper.insertDiscussPost(post);
     }
+    /**
+    * Description:帖子详情
+    * date: 2022/4/6 16:08
+    * @author: MaoJY
+    * @since JDK 1.8
+    */
+    public DiscussPost discussPostDetail(int id){
+      return  discussPostMapper.discussPostDetail(id);
+    }
+    /**
+    * Description:修改帖子数
+    * date: 2022/4/6 18:48
+    * @author: MaoJY
+    * @since JDK 1.8
+    */
+    public int updateCommentCount(int id,int commentCount){
+        return discussPostMapper.updateCommentCount(id,commentCount);
+    }
 }
