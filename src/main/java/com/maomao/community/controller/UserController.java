@@ -1,6 +1,7 @@
 package com.maomao.community.controller;
 
 import com.maomao.community.annotation.LoginRequired;
+import com.maomao.community.service.LikesService;
 import com.maomao.community.util.CommunityUtil;
 import com.maomao.community.util.HostHolder;
 import com.maomao.community.entity.User;
@@ -17,6 +18,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
@@ -46,6 +48,8 @@ public class UserController {
 
     @Autowired
     private HostHolder hostHolder;
+    @Autowired
+    private LikesService likesService;
 
     @LoginRequired
     @RequestMapping(path = "/setting", method = RequestMethod.GET)
@@ -110,5 +114,21 @@ public class UserController {
             log.error("读取头像失败: " + e.getMessage());
         }
     }
-
+    /**
+    * Description:个人主页
+    * date: 2022/4/15 23:01
+    * @author: MaoJY
+    * @since JDK 1.8
+    */
+    @RequestMapping("/profile/{userId}")
+    public String getProfilePage(@PathVariable("userId") int userId,Model model){
+        User user = userService.findUserById(userId);
+        if (user == null) {
+            throw  new RuntimeException("用户不存在");
+        }
+        model.addAttribute("user",user);
+        int likeCount = likesService.getUserLikeCount(userId);
+        model.addAttribute("likeCount",likeCount);
+        return "site/profile";
+    }
 }

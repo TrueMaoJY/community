@@ -1,8 +1,8 @@
 package com.maomao.community.config;
 
-import com.maomao.community.controller.interceptor.AlphaInterceptor;
-import com.maomao.community.controller.interceptor.LoginRequiredInterceptor;
-import com.maomao.community.controller.interceptor.LoginTicketInterceptor;
+import com.maomao.community.interceptor.AlphaInterceptor;
+import com.maomao.community.interceptor.LoginRequiredInterceptor;
+import com.maomao.community.interceptor.LoginTicketInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;

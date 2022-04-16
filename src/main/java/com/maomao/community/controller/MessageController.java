@@ -132,6 +132,7 @@ public class MessageController {
      @RequestMapping("/letter/send")
      @ResponseBody
     public Object sendLetter(String toName, String content){
+         int a=1/0;
        User toUser= userService.findUserByName(toName);
          if (toUser == null) {
              return RespBean.error(RespBeanEnum.TOUSER_NOT_EXIST);

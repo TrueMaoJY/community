@@ -1,4 +1,4 @@
-package com.maomao.community.controller.interceptor;
+package com.maomao.community.interceptor;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

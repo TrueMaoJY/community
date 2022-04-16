@@ -1,4 +1,4 @@
-package com.maomao.community.controller.interceptor;
+package com.maomao.community.interceptor;
 
 import com.maomao.community.entity.LoginTicket;
 import com.maomao.community.entity.User;

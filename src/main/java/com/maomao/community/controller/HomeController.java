@@ -4,7 +4,9 @@ import com.maomao.community.entity.DiscussPost;
 import com.maomao.community.entity.Page;
 import com.maomao.community.entity.User;
 import com.maomao.community.service.DiscussPostService;
+import com.maomao.community.service.LikesService;
 import com.maomao.community.service.UserService;
+import com.maomao.community.vo.ConstantVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,14 +19,15 @@ import java.util.List;
 import java.util.Map;
 
 @Controller
-public class HomeController {
+public class HomeController  {
 
     @Autowired
     private DiscussPostService discussPostService;
 
     @Autowired
     private UserService userService;
-
+    @Autowired
+    private LikesService likesService;
     @RequestMapping(path = {"/","/index"}, method = RequestMethod.GET)
     public String getIndexPage(Model model, Page page) {
         // 方法调用钱,SpringMVC会自动实例化Model和Page,并将Page注入Model.
@@ -40,6 +43,8 @@ public class HomeController {
                 map.put("post", post);
                 User user = userService.findUserById(post.getUserId());
                 map.put("user", user);
+                long likeCount = likesService.getLikeCount(ConstantVO.ENTITY_TYPE_POST, post.getId());
+                map.put("likeCount",likeCount);
                 discussPosts.add(map);
             }
         }
