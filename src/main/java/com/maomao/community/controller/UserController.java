@@ -1,11 +1,13 @@
 package com.maomao.community.controller;
 
 import com.maomao.community.annotation.LoginRequired;
+import com.maomao.community.service.FollowService;
 import com.maomao.community.service.LikesService;
 import com.maomao.community.util.CommunityUtil;
 import com.maomao.community.util.HostHolder;
 import com.maomao.community.entity.User;
 import com.maomao.community.service.UserService;
+import com.maomao.community.vo.ConstantVO;
 import lombok.extern.slf4j.Slf4j;
 import lombok.extern.slf4j.XSlf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -50,6 +52,8 @@ public class UserController {
     private HostHolder hostHolder;
     @Autowired
     private LikesService likesService;
+    @Autowired
+    private FollowService followService;
 
     @LoginRequired
     @RequestMapping(path = "/setting", method = RequestMethod.GET)
@@ -128,6 +132,16 @@ public class UserController {
         }
         model.addAttribute("user",user);
         int likeCount = likesService.getUserLikeCount(userId);
+        //关注数
+        long followeesCount = followService.getFolloweesCount(userId, ConstantVO.ENTITY_TYPE_USER);
+        model.addAttribute("followeesCount",followeesCount);
+        long followersCount = followService.getFollowersCount(ConstantVO.ENTITY_TYPE_USER, userId);
+        model.addAttribute("followersCount",followersCount);
+        if (hostHolder.getUser()!=null){
+            model.addAttribute("hasFollowed",followService.hasFollow(hostHolder.getUser().getId(),ConstantVO.ENTITY_TYPE_USER,userId));
+        }else {
+            model.addAttribute("hasFollowed",false);
+        }
         model.addAttribute("likeCount",likeCount);
         return "site/profile";
     }

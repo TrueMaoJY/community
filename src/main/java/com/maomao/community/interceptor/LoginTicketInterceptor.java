@@ -27,7 +27,7 @@ public class LoginTicketInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         // 从cookie中获取凭证
         String ticket = CookieUtil.getValue(request, "ticket");
-
+        //TODO 是否需要一张表来存储用户的ticket及其状态？ 为了其他的目的
         if (ticket != null) {
             // 查询凭证
             LoginTicket loginTicket = userService.findLoginTicket(ticket);
