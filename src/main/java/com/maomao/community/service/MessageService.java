@@ -89,4 +89,41 @@ public class MessageService {
     public int readMessage(List<Integer> ids,int status){
         return messageMapper.updateStatus(ids,status);
     }
+
+    /**
+    * Description:查询最新的一条某一个主题的通知
+    * date: 2022/4/22 16:23
+    * @author: MaoJY
+    * @since JDK 1.8
+    */
+    public Message findLatestNotice(int userId,String topic){
+        return messageMapper.selectLatestNotice(userId,topic);
+    }
+    /**
+    * Description:查询某一主题的所有记录
+    * date: 2022/4/22 16:25
+    * @author: MaoJY
+    * @since JDK 1.8
+    */
+    public int findNoticeCount(int userId, String topic){
+        return messageMapper.selectNoticeCount(userId,topic);
+    }
+    /**
+    * Description:查询某一主题或者所有主题未读的记录数
+    * date: 2022/4/22 16:26
+    * @author: MaoJY
+    * @since JDK 1.8
+    */
+    public int findNoticeUnread(int userId,String topic){
+        return messageMapper.selectNoticeUnread(userId,topic);
+    }
+    /**
+    * Description:查询所有主题的系统通知
+    * date: 2022/4/25 18:22
+    * @author: MaoJY
+    * @since JDK 1.8
+    */
+    public List<Message> findNotices(int userId,String topic,int offset,int limit){
+        return messageMapper.selectNotices(userId, topic, offset, limit);
+    }
 }

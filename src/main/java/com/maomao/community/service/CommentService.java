@@ -56,4 +56,8 @@ public class CommentService {
         return commentMapper.selectCountByEntity(entityType, entityId);
     }
 
+    public Comment findCommentById(int entityId){
+        return commentMapper.findCommentById(entityId);
+    }
+
 }

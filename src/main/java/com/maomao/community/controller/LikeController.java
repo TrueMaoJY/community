@@ -1,8 +1,13 @@
 package com.maomao.community.controller;
 
+import com.maomao.community.entity.Comment;
+import com.maomao.community.entity.DiscussPost;
+import com.maomao.community.entity.Event;
 import com.maomao.community.entity.User;
+import com.maomao.community.kafkaEvent.EventProducer;
 import com.maomao.community.service.LikesService;
 import com.maomao.community.util.HostHolder;
+import com.maomao.community.vo.ConstantVO;
 import com.maomao.community.vo.LikesVO;
 import com.maomao.community.vo.RespBean;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,14 +26,29 @@ public class LikeController {
    private LikesService likesService;
     @Autowired
     private HostHolder hostHolder;
+    @Autowired
+    private EventProducer eventProducer;
     @RequestMapping("/like")
     @ResponseBody
-    public RespBean likes(Integer entityType,Integer entityId,Integer entityUserId){
+    public RespBean likes(Integer entityType,Integer entityId,Integer entityUserId,int postId){
         User user = hostHolder.getUser();
         likesService.likes(entityType,entityId, user.getId(),entityUserId);
         long likeCount = likesService.getLikeCount(entityType, entityId);
         int likeStatus = likesService.findEntityLikeStatus(user.getId(),entityType, entityId);
         LikesVO likesVO = new LikesVO(likeStatus,likeCount);
+
+        //发送消息 --点赞才需要发送
+        if (likeStatus==1){
+            Event event = new Event();
+            event.setTopic(ConstantVO.TOPIC_LIKE)
+                    .setEntityId(entityId)
+                    .setUserId(user.getId())
+                    .setEntityType(entityType)
+                    .setData("postId",postId)
+                    .setEntityUserId(entityUserId);
+            eventProducer.fireEvent(event);
+        }
+
         return RespBean.success(likesVO);
     }
 }

@@ -1,8 +1,10 @@
 package com.maomao.community.controller;
 
 import com.maomao.community.annotation.LoginRequired;
+import com.maomao.community.entity.Event;
 import com.maomao.community.entity.Page;
 import com.maomao.community.entity.User;
+import com.maomao.community.kafkaEvent.EventProducer;
 import com.maomao.community.service.UserService;
 import com.maomao.community.service.FollowService;
 import com.maomao.community.util.HostHolder;
@@ -31,6 +33,8 @@ public class FollowController {
     private HostHolder hostHolder;
     @Autowired
     private UserService userService;
+    @Autowired
+    private EventProducer eventProducer;
 
     /**
      * Description: 关注
@@ -42,7 +46,15 @@ public class FollowController {
     @ResponseBody
     @LoginRequired
     public RespBean follow(int entityId,int entityType,Model model){
-        followService.follow(hostHolder.getUser().getId(),entityType,entityId);
+        User user = hostHolder.getUser();
+        followService.follow(user.getId(),entityType,entityId);
+        Event event = new Event();
+        event.setTopic(ConstantVO.TOPIC_FOLLOW)
+                .setEntityId(entityId)
+                .setUserId(user.getId())
+                .setEntityType(entityType)
+                .setEntityUserId(entityId);
+        eventProducer.fireEvent(event);
         return RespBean.success();
     }
     /**

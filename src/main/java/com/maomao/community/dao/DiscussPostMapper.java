@@ -37,4 +37,6 @@ public interface DiscussPostMapper {
     * @since JDK 1.8
     */
     int updateCommentCount(int id,int commentCount);
+
+    DiscussPost findDiscussById(int id);
 }

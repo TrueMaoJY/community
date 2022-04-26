@@ -31,6 +31,10 @@ public class ServiceLogAspect {
     @Before("pointCut()")
     public void before(JoinPoint joinPoint){
         ServletRequestAttributes requestAttributes =(ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        //TODO 访问服务层不一定经过客户端，kafka发送消息，直接内部调用
+        if (requestAttributes==null){
+            return;
+        }
         HttpServletRequest request = requestAttributes.getRequest();
         String ip = request.getRemoteHost();
         String now=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());

@@ -42,4 +42,10 @@
         update discuss_post
         set comment_count = #{commentCount} where id=#{id}
     </update>
+
+    <select id="findDiscussById" resultType="DiscussPost">
+        select <include refid="selectFields"></include>
+        from discuss_post
+        where id=#{id}
+    </select>
 </mapper>
