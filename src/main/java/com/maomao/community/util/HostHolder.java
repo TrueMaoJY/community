@@ -9,13 +9,13 @@ import org.springframework.stereotype.Component;
 @Component
 public class HostHolder {
 
-    private ThreadLocal<User> users = new ThreadLocal<>();
+    private static ThreadLocal<User> users = new ThreadLocal<>();
 
     public void setUser(User user) {
         users.set(user);
     }
 
-    public User getUser() {
+    public  static User getUser() {
         return users.get();
     }
 

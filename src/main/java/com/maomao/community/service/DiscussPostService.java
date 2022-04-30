@@ -61,4 +61,10 @@ public class DiscussPostService {
     public DiscussPost findDiscussById(int id){
         return  discussPostMapper.findDiscussById(id);
     }
+    public void updateType(int id,int type){
+        discussPostMapper.updateType(id, type);
+    }
+    public void updateStatus (int id,int status){
+        discussPostMapper.updateStatus(id, status);
+    }
 }

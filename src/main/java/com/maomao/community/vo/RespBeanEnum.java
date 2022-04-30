@@ -17,10 +17,13 @@ public enum RespBeanEnum {
     ERROR(500,"服务器端异常"),
 
     //登录
+
     LOGIN_ERROR (500200,"用户名或密码错误"),
     MOBILE_PATTERN_ERROR(500201,"手机号格式错误"),
     BIND_ERROR (500202,"数据校验异常"),
     SESSION_ERROR(500203,"用户信息已过期，请重新登录"),
+    NOT_LOGIN(500204,"用户未登录"),
+    AUTHORITY_DENIED(500205,"权限不够，无法访问"),
 
     //评论
     SUCCESS_ISSUE(500300,"发表评论成功"),

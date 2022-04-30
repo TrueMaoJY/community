@@ -3,6 +3,7 @@ $(function(){
 });
 
 function follow() {
+	csrf();
 	var btn = this;
 	if($(btn).hasClass("btn-info")) {
 		// 关注TA

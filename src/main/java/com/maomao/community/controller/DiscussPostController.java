@@ -1,9 +1,7 @@
 package com.maomao.community.controller;
 
-import com.maomao.community.entity.Comment;
-import com.maomao.community.entity.DiscussPost;
-import com.maomao.community.entity.Page;
-import com.maomao.community.entity.User;
+import com.maomao.community.entity.*;
+import com.maomao.community.kafkaEvent.EventProducer;
 import com.maomao.community.service.CommentService;
 import com.maomao.community.service.DiscussPostService;
 import com.maomao.community.service.LikesService;
@@ -12,8 +10,10 @@ import com.maomao.community.util.HostHolder;
 import com.maomao.community.vo.ConstantVO;
 import com.maomao.community.vo.RespBean;
 import com.maomao.community.vo.RespBeanEnum;
+import lombok.ToString;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -39,9 +39,12 @@ public class DiscussPostController {
     private CommentService commentService;
     @Autowired
     private LikesService likesService;
+    @Autowired
+    private EventProducer eventProducer;
 
     @RequestMapping("/addPost")
     @ResponseBody
+    @Transactional
     public RespBean addPost(DiscussPost discussPost){
         User user = hostHolder.getUser();
         if (user== null) {
@@ -53,6 +56,14 @@ public class DiscussPostController {
         discussPost.setUserId(user.getId());
         discussPost.setCreateTime(new Date());
         discussPostService.insertDiscussPost(discussPost);
+        //触发发帖事件
+        Event event =new Event()
+                .setUserId(user.getId())
+                .setEntityType(ConstantVO.ENTITY_TYPE_POST)
+                .setTopic(ConstantVO.TOPIC_PUBLISH)
+                .setEntityId(discussPost.getId());
+        eventProducer.fireEvent(event);
+
         return RespBean.success(RespBeanEnum.SUCCESS_ISSUE);
     }
 //    @RequestMapping("/detail/{id}")
@@ -152,5 +163,66 @@ public class DiscussPostController {
         model.addAttribute("comments", commentVoList);
 
         return "/site/discuss-detail";
+    }
+    /**
+    * Description:置顶
+    * date: 2022/4/28 20:46
+    * @author: MaoJY
+    * @since JDK 1.8
+    */
+    //TODO 取消置顶和加精
+    @RequestMapping("/top")
+    @ResponseBody
+    public RespBean top(int id){
+        discussPostService.updateType(id,ConstantVO.POST_TYPE_TOP);
+        //更新es中的数据
+        //触发发帖事件
+        Event event =new Event()
+                .setUserId(HostHolder.getUser().getId())
+                .setEntityType(ConstantVO.ENTITY_TYPE_POST)
+                .setTopic(ConstantVO.TOPIC_PUBLISH)
+                .setEntityId(id);
+        eventProducer.fireEvent(event);
+        return RespBean.success();
+    }
+    /**
+    * Description:加精
+    * date: 2022/4/28 20:53
+    * @author: MaoJY
+    * @since JDK 1.8
+    */
+    @RequestMapping("/wonderful")
+    @ResponseBody
+    public RespBean wonderful(int id){
+        discussPostService.updateStatus(id,ConstantVO.POST_STATUS_WONDERFUL);
+        //更新es中的数据
+        //触发发帖事件
+        Event event =new Event()
+                .setUserId(HostHolder.getUser().getId())
+                .setEntityType(ConstantVO.ENTITY_TYPE_POST)
+                .setTopic(ConstantVO.TOPIC_PUBLISH)
+                .setEntityId(id);
+        eventProducer.fireEvent(event);
+        return RespBean.success();
+    }
+    /**
+    * Description:拉黑
+    * date: 2022/4/28 20:54
+    * @author: MaoJY
+    * @since JDK 1.8
+    */
+    @RequestMapping("/block")
+    @ResponseBody
+    public RespBean block(int id){
+        discussPostService.updateStatus(id,ConstantVO.POST_STATUS_DELETE);
+        //更新es中的数据
+        //触发事件
+        Event event =new Event()
+                .setUserId(HostHolder.getUser().getId())
+                .setEntityType(ConstantVO.ENTITY_TYPE_POST)
+                .setTopic(ConstantVO.TOPIC_BLOCK)
+                .setEntityId(id);
+        eventProducer.fireEvent(event);
+        return RespBean.success();
     }
 }

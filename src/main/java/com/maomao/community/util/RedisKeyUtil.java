@@ -14,6 +14,8 @@ public class RedisKeyUtil {
     private static final String KAPTCHA="kaptcha";
     private static final  String LOGIN_TICKET="ticket";
     private static final String PREFIX_USER_LOGIN="user";
+    private static final String PREFIX_UV="uv";
+    private static final String PREFIX_DAU="DAU";
 
     public static  String getPrefixEntityLike(int entityType,int entityId){
         return PREFIX_ENTITY_LIKE+SPLIT+entityType+SPLIT+entityId;
@@ -36,5 +38,17 @@ public class RedisKeyUtil {
     }
     public static String getPrefixUser(int userId){
         return PREFIX_USER_LOGIN+SPLIT+userId;
+    }
+    public static String getPrefixUv(String date){
+        return PREFIX_UV+SPLIT+date;
+    }
+    public static String getPrefixUv(String startDate,String endDate){
+        return PREFIX_UV+SPLIT+startDate+SPLIT+endDate;
+    }
+    public static String getPrefixDau(String date){
+        return PREFIX_DAU+SPLIT+date;
+    }
+    public static String getPrefixDau(String startDate,String endDate){
+        return PREFIX_DAU+SPLIT+startDate+SPLIT+endDate;
     }
 }

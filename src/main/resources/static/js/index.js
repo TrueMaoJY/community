@@ -4,7 +4,7 @@ $(function(){
 
 function publish() {
 	$("#publishModal").modal("hide");
-
+	csrf();
 	$.ajax({
 		url:CONTEXT_PATH+'/discuss/addPost',
 		type:'post',
@@ -18,7 +18,7 @@ function publish() {
 				$("#hintModal").modal("show");
 				setTimeout(function(){
 					$("#hintModal").modal("hide");
-					window.location.reload();
+					 // window.location.reload();
 				}, 2000);
 			}else{
 				console.log("未知异常");

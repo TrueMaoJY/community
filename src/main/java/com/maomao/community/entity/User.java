@@ -1,9 +1,14 @@
 package com.maomao.community.entity;
 
 import lombok.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -20,6 +25,5 @@ public class User {
     private String activationCode;
     private String headerUrl;
     private Date createTime;
-
 
 }

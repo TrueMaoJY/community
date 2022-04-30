@@ -65,6 +65,16 @@ public class CommentController {
             event.setEntityUserId(target.getUserId());
         }
         eventProducer.fireEvent(event);
+        //触发发帖事件
+         if(comment.getEntityType()==ConstantVO.ENTITY_TYPE_POST){
+             //触发发帖事件
+                 event =new Event()
+                     .setUserId(user.getId())
+                     .setEntityType(ConstantVO.ENTITY_TYPE_POST)
+                     .setTopic(ConstantVO.TOPIC_PUBLISH)
+                     .setEntityId(discussPostId);
+             eventProducer.fireEvent(event);
+         }
         return "redirect:/discuss/detail/"+discussPostId;
     }
 }

@@ -1,5 +1,14 @@
 var CONTEXT_PATH = "/community";
 
+
+function csrf(){
+	// 发送ajax之前，将csrf令牌设置到请求头中
+	let token=$("#_csrf").attr('content');
+	let header=$("#_csrf_header").attr('content');
+	$(document).ajaxSend(function (e,xhr,options){
+		xhr.setRequestHeader(header,token);
+	});
+}
 window.alert = function(message) {
 	if(!$(".alert-box").length) {
 		$("body").append(

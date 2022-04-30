@@ -39,4 +39,19 @@ public interface DiscussPostMapper {
     int updateCommentCount(int id,int commentCount);
 
     DiscussPost findDiscussById(int id);
+
+    /**
+    * Description:置顶
+    * date: 2022/4/28 20:43
+    * @author: MaoJY
+    * @since JDK 1.8
+    */
+    void updateType(int id,int type);
+    /**
+    * Description:加精1，删除2
+    * date: 2022/4/28 20:44
+    * @author: MaoJY
+    * @since JDK 1.8
+    */
+    void updateStatus(int id,int status);
 }

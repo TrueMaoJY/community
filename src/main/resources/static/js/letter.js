@@ -5,7 +5,7 @@ $(function(){
 
 function send_letter() {
 	$("#sendModal").modal("hide");
-
+	csrf();
 	$.ajax({
 		url: CONTEXT_PATH+'/message/letter/send',
 		type:'post',

@@ -51,5 +51,13 @@ public class HomeController  {
         model.addAttribute("discussPosts", discussPosts);
         return "/index";
     }
+//    @RequestMapping("/error")
+//    public String errorPage(){
+//    return  "/error/500";
+//    }
+    @RequestMapping("/denied")
+    public String deniedPage(){
+        return "/error/404";
+    }
 
 }

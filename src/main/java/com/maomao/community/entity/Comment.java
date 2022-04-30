@@ -19,6 +19,4 @@ public class Comment {
     private String content;
     private int status;
     private Date createTime;
-
-
 }

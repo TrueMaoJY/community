@@ -2,16 +2,15 @@ package com.maomao.community.controller;
 
 import com.google.code.kaptcha.Producer;
 import com.maomao.community.entity.User;
-import com.maomao.community.util.CommunityConstant;
 import com.maomao.community.service.UserService;
 import com.maomao.community.util.CommunityUtil;
 import com.maomao.community.util.RedisKeyUtil;
+import com.maomao.community.vo.ConstantVO;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.cache.CacheProperties;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,14 +22,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import javax.imageio.ImageIO;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Map;
 
 @Controller
-public class LoginController implements CommunityConstant {
+public class LoginController  {
 
     private static final Logger logger = LoggerFactory.getLogger(LoginController.class);
 
@@ -74,10 +72,10 @@ public class LoginController implements CommunityConstant {
     @RequestMapping(path = "/activation/{userId}/{code}", method = RequestMethod.GET)
     public String activation(Model model, @PathVariable("userId") int userId, @PathVariable("code") String code) {
         int result = userService.activation(userId, code);
-        if (result == ACTIVATION_SUCCESS) {
+        if (result == ConstantVO.ACTIVATION_SUCCESS) {
             model.addAttribute("msg", "激活成功,您的账号已经可以正常使用了!");
             model.addAttribute("target", "/login");
-        } else if (result == ACTIVATION_REPEAT) {
+        } else if (result == ConstantVO.ACTIVATION_REPEAT) {
             model.addAttribute("msg", "无效操作,该账号已经激活过了!");
             model.addAttribute("target", "/index");
         } else {
@@ -130,7 +128,7 @@ public class LoginController implements CommunityConstant {
         }
 
         // 检查账号,密码
-        int expiredSeconds = rememberme ? REMEMBER_EXPIRED_SECONDS : DEFAULT_EXPIRED_SECONDS;
+        int expiredSeconds = rememberme ? ConstantVO.REMEMBER_EXPIRED_SECONDS : ConstantVO.DEFAULT_EXPIRED_SECONDS;
         Map<String, Object> map = userService.login(username, password, expiredSeconds);
         if (map.containsKey("ticket")) {
             Cookie cookie = new Cookie("ticket", map.get("ticket").toString());
