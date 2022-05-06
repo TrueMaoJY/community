@@ -95,15 +95,4 @@ public class DataService {
        });
     }
 
-    public static void main(String[] args) {
-        Date date=new Date();
-        System.out.println(date);
-
-        DataService dataService =new DataService();
-        LocalDate dauStartDate = LocalDate.now();
-        String format = dtf.format(dauStartDate);
-        LocalDate dauEndDate=dauStartDate.plusDays(1);
-        long dau = dataService.calculateDAU(dauStartDate, dauEndDate);
-        System.out.println(dau);
-    }
 }

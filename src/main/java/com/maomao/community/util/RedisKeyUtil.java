@@ -16,6 +16,7 @@ public class RedisKeyUtil {
     private static final String PREFIX_USER_LOGIN="user";
     private static final String PREFIX_UV="uv";
     private static final String PREFIX_DAU="DAU";
+    private static final String PREFIX_POST="post";
 
     public static  String getPrefixEntityLike(int entityType,int entityId){
         return PREFIX_ENTITY_LIKE+SPLIT+entityType+SPLIT+entityId;
@@ -50,5 +51,8 @@ public class RedisKeyUtil {
     }
     public static String getPrefixDau(String startDate,String endDate){
         return PREFIX_DAU+SPLIT+startDate+SPLIT+endDate;
+    }
+    public static String getPrefixPost(){
+        return PREFIX_POST+SPLIT+"score";
     }
 }

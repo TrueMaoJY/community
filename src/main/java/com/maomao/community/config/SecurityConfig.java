@@ -156,7 +156,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         ConstantVO.AUTHORITY_MODERATOR
                 ).antMatchers(
                         "/discuss/block",
-                         "/data/**"
+                         "/data/**",
+                         "/actuator/**"
                 ).hasAnyAuthority(
                         ConstantVO.AUTHORITY_ADMIN
                 )

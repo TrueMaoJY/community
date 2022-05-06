@@ -20,8 +20,8 @@ import java.util.logging.SimpleFormatter;
  * @create 2022-04-12 20:28
  * @Description:
  */
-@Aspect
-@Component
+//@Aspect
+//@Component
 @Slf4j
 public class ServiceLogAspect {
     @Pointcut("execution(* com.maomao.community.service.*.*(..))")

@@ -7,11 +7,13 @@ import com.maomao.community.service.DiscussPostService;
 import com.maomao.community.service.LikesService;
 import com.maomao.community.service.UserService;
 import com.maomao.community.util.HostHolder;
+import com.maomao.community.util.RedisKeyUtil;
 import com.maomao.community.vo.ConstantVO;
 import com.maomao.community.vo.RespBean;
 import com.maomao.community.vo.RespBeanEnum;
 import lombok.ToString;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
@@ -42,6 +44,9 @@ public class DiscussPostController {
     @Autowired
     private EventProducer eventProducer;
 
+    @Autowired
+    private RedisTemplate redisTemplate;
+
     @RequestMapping("/addPost")
     @ResponseBody
     @Transactional
@@ -63,7 +68,9 @@ public class DiscussPostController {
                 .setTopic(ConstantVO.TOPIC_PUBLISH)
                 .setEntityId(discussPost.getId());
         eventProducer.fireEvent(event);
-
+        //将帖子id存到redis中
+        String redisKey = RedisKeyUtil.getPrefixPost();
+        redisTemplate.opsForSet().add(redisKey,discussPost.getId());
         return RespBean.success(RespBeanEnum.SUCCESS_ISSUE);
     }
 //    @RequestMapping("/detail/{id}")
@@ -89,13 +96,14 @@ public class DiscussPostController {
            likeStatus= likesService.findEntityLikeStatus(hostHolder.getUser().getId(),
                     ConstantVO.ENTITY_TYPE_POST, post.getId());
         }
+        int totalReplyCount = post.getCommentCount();
         model.addAttribute("likeCount",likeCount);
         model.addAttribute("likeStatus",likeStatus);
 
         // 评论分页信息
         page.setLimit(5);
         page.setPath("/discuss/detail/" + discussPostId);
-        page.setRows(post.getCommentCount());
+        page.setRows(totalReplyCount);
 
         // 评论: 给帖子的评论
         // 回复: 给评论的评论
@@ -203,6 +211,9 @@ public class DiscussPostController {
                 .setTopic(ConstantVO.TOPIC_PUBLISH)
                 .setEntityId(id);
         eventProducer.fireEvent(event);
+        //将帖子id存到redis中
+        String redisKey = RedisKeyUtil.getPrefixPost();
+        redisTemplate.opsForSet().add(redisKey,id);
         return RespBean.success();
     }
     /**

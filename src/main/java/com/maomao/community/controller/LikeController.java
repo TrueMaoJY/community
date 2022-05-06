@@ -7,10 +7,12 @@ import com.maomao.community.entity.User;
 import com.maomao.community.kafkaEvent.EventProducer;
 import com.maomao.community.service.LikesService;
 import com.maomao.community.util.HostHolder;
+import com.maomao.community.util.RedisKeyUtil;
 import com.maomao.community.vo.ConstantVO;
 import com.maomao.community.vo.LikesVO;
 import com.maomao.community.vo.RespBean;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -28,6 +30,8 @@ public class LikeController {
     private HostHolder hostHolder;
     @Autowired
     private EventProducer eventProducer;
+    @Autowired
+    private RedisTemplate redisTemplate;
     @RequestMapping("/like")
     @ResponseBody
     public RespBean likes(Integer entityType,Integer entityId,Integer entityUserId,int postId){
@@ -47,6 +51,11 @@ public class LikeController {
                     .setData("postId",postId)
                     .setEntityUserId(entityUserId);
             eventProducer.fireEvent(event);
+            if(entityType==ConstantVO.ENTITY_TYPE_POST){
+                //将帖子id存到redis中
+                String redisKey = RedisKeyUtil.getPrefixPost();
+                redisTemplate.opsForSet().add(redisKey,postId);
+            }
         }
 
         return RespBean.success(likesVO);

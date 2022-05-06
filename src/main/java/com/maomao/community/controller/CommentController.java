@@ -8,8 +8,10 @@ import com.maomao.community.kafkaEvent.EventProducer;
 import com.maomao.community.service.CommentService;
 import com.maomao.community.service.DiscussPostService;
 import com.maomao.community.util.HostHolder;
+import com.maomao.community.util.RedisKeyUtil;
 import com.maomao.community.vo.ConstantVO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,6 +35,8 @@ public class CommentController {
     private DiscussPostService discussPostService;
     @Autowired
     private EventProducer eventProducer;
+    @Autowired
+    private RedisTemplate redisTemplate;
     /**
     * Description:添加评论
     * date: 2022/4/6 19:24
@@ -74,6 +78,9 @@ public class CommentController {
                      .setTopic(ConstantVO.TOPIC_PUBLISH)
                      .setEntityId(discussPostId);
              eventProducer.fireEvent(event);
+             //将帖子id存到redis中
+             String redisKey = RedisKeyUtil.getPrefixPost();
+             redisTemplate.opsForSet().add(redisKey,discussPostId);
          }
         return "redirect:/discuss/detail/"+discussPostId;
     }
